@@ -1,0 +1,34 @@
+<configuration>
+<!--
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
+    </encoder>
+  </appender>
+-->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/jpa-template.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover -->
+      <fileNamePattern>logs/jpa-template.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+      <!-- keep 30 days' worth of history capped at 3GB total size -->
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{25} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.hibernate"  level="INFO" />
+  <logger name="org.jboss.weld" level="INFO" />
+  <logger name="org.flywaydb"   level="INFO" />
+  <logger name="org.apache.jasper.servlet.TldScanner.scanJars" level="DEBUG" />
+
+  <root level="debug">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>

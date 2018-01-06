@@ -1,0 +1,67 @@
+apply plugin: 'java'
+apply plugin: 'war'
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+war {
+    baseName = 'template'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+test {
+    useTestNG() {
+        useDefaultListeners = true
+    }
+}
+
+task deploy(type: Copy, dependsOn: war) {
+    from war.archivePath
+    into file(new File("${tomcat_home}/webapps"))   // absolute path
+    description 'Copies the .war into the tomcat webapp directory; see gradle.properties.'
+}
+
+task copyUi(type: Copy) {
+    from 'src/main/webapp/'
+    into tomcat_home+'/webapps/'+war.baseName+'-'+war.version+'/'   // absolute path
+    exclude 'WEB-INF/**'
+    exclude 'META-INF/**'
+    description 'Copies the webapp content (only) into the tomcat deployment directory.'
+}
+
+dependencies {
+    //  core capabilities
+    compile 'org.slf4j:slf4j-api:1.7.22'
+    compile 'ch.qos.logback:logback-classic:1.2.1'
+    compile 'ch.qos.logback:logback-core:1.2.1'
+    compile 'com.google.guava:guava:22.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+
+    //  dependency management
+    providedCompile 'javax.enterprise:cdi-api:1.2'
+    // Reference implementation for CDI on a servlet container
+    runtime group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: '2.4.6.Final'
+
+    //  servlet and JSF dependencies
+    providedCompile group: 'javax.servlet',  name: 'javax.servlet-api', version: '3.1.0'
+    providedCompile group: 'javax.faces',    name: 'javax.faces-api', version: '2.2'
+    compile group: 'com.sun.faces',          name: 'jsf-api', version: '2.2.15'
+    compile group: 'com.sun.faces',          name: 'jsf-impl', version: '2.2.15'
+    compile group: 'javax.servlet.jsp.jstl', name: 'jstl', version: '1.2'
+    compile group: 'javax.servlet.jsp',      name: 'javax.servlet.jsp-api', version: '2.3.1'
+    // runtime: 'org.glassfish:javax.faces:2.2.8-02'    // Mojarra implementation
+
+    // persistence
+    compile group: 'mysql',         name: 'mysql-connector-java',    version: '6.0.6'
+    compile group: 'org.hibernate', name: 'hibernate-core',          version: '5.2.12.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.2.12.Final'
+    compile group: 'org.flywaydb',  name: 'flyway-core',             version: '5.0.3'
+
+    // tests
+    testCompile 'org.testng:testng:6.9.12'
+    testCompile 'com.github.h-thurow:tomcat8jndi:1.0.0'
+    testRuntime 'org.apache.tomcat:tomcat-dbcp:8.0.5'
+    testRuntime group: 'mysql', name: 'mysql-connector-java', version: '5.1.34'
+}

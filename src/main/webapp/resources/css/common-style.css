@@ -1,0 +1,19 @@
+#page{
+  margin: 20 auto;
+}
+
+#header{
+  width: 100%;
+  height:60px;
+  margin-bottom:4px;
+}
+
+#content{
+  margin-right:16px;
+  margin-bottom:4px;
+}
+
+#footer{
+  width: 100%;
+  height:20px;
+}

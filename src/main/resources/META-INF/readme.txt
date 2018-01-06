@@ -1,0 +1,1 @@
+the CDI manager expects to find persistence.xml on the classpath in META-INF.

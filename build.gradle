@@ -17,7 +17,7 @@ test {
     }
 }
 
-task deploy(type: Copy, dependsOn: war) {
+task deploy(type: Copy, dependsOn: build) {
     from war.archivePath
     into file(new File("${tomcat_home}/webapps"))   // absolute path
     description 'Copies the .war into the tomcat webapp directory; see gradle.properties.'
